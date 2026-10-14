@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPS 月租费 - 支付宝付款</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Noto Sans SC", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f0f4ff 0%, #e8f4ff 50%, #f5f0ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            color: #1a1f36;
+        }
+
+        .payment-card {
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 24px 80px rgba(23, 35, 76, 0.12), 0 8px 24px rgba(23, 35, 76, 0.06);
+            width: 100%;
+            max-width: 460px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .payment-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #1677ff 0%, #2563eb 50%, #7c3aed 100%);
+        }
+
+        .header {
+            padding: 36px 32px 24px;
+            text-align: center;
+            background: linear-gradient(180deg, #fafbff 0%, #ffffff 100%);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #e6f0ff;
+            color: #1677ff;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 999px;
+            margin-bottom: 16px;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            background: #1677ff;
+            border-radius: 50%;
+            box-shadow: 0 0 0 3px rgba(22, 119, 255, 0.15);
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1f36;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 400;
+        }
+
+        .plan-section {
+            padding: 0 32px 28px;
+        }
+
+        .plan-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 18px;
+            padding: 22px;
+        }
+
+        .plan-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .plan-icon {
+            width: 20px;
+            height: 20px;
+            color: #1677ff;
+        }
+
+        .plan-desc {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 18px;
+        }
+
+        .specs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .spec {
+            text-align: center;
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 12px 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .spec-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .spec-label {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 3px;
+        }
+
+        .price-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            padding-top: 16px;
+            border-top: 1px dashed #cbd5e1;
+        }
+
+        .price-label {
+            font-size: 14px;
+            color: #475569;
+            font-weight: 500;
+        }
+
+        .price {
+            display: flex;
+            align-items: baseline;
+            gap: 2px;
+        }
+
+        .currency {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1677ff;
+        }
+
+        .amount {
+            font-size: 40px;
+            font-weight: 800;
+            color: #1677ff;
+            line-height: 1;
+            letter-spacing: -1px;
+        }
+
+        .period {
+            font-size: 14px;
+            color: #6b7280;
+            margin-left: 2px;
+        }
+
+        .qr-section {
+            padding: 0 32px 32px;
+            text-align: center;
+        }
+
+        .qr-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        .alipay-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .alipay-logo {
+            width: 28px;
+            height: 28px;
+            background: #1677ff;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .alipay-text {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1f36;
+        }
+
+        .qr-wrapper {
+            position: relative;
+            display: inline-block;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .qr-wrapper img {
+            width: 220px;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .scan-hint {
+            margin-top: 16px;
+            font-size: 14px;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .scan-hint strong {
+            color: #1677ff;
+            font-weight: 600;
+        }
+
+        .payee-info {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid #f1f5f9;
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .payee-name {
+            color: #334155;
+            font-weight: 600;
+        }
+
+        .footer {
+            padding: 0 32px 32px;
+        }
+
+        .notice {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 12px;
+            color: #92400e;
+            line-height: 1.7;
+        }
+
+        .notice-title {
+            font-weight: 700;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        @media (max-width: 480px) {
+            .payment-card {
+                border-radius: 22px;
+            }
+            .header, .plan-section, .qr-section, .footer {
+                padding-left: 22px;
+                padding-right: 22px;
+            }
+            .amount {
+                font-size: 34px;
+            }
+            .qr-wrapper img {
+                width: 190px;
+                height: 190px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-card">
+        <div class="header">
+            <div class="badge">
+                <span class="badge-dot"></span>
+                月度订阅
+            </div>
+            <h1>VPS 服务器月租费</h1>
+            <p class="subtitle">完成付款后，服务将在 10 分钟内开通</p>
+        </div>
+
+        <div class="plan-section">
+            <div class="plan-card">
+                <div class="plan-name">
+                    <svg class="plan-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                        <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                        <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                        <line x1="6" y1="18" x2="6.01" y2="18"></line>
+                    </svg>
+                    基础版 VPS 套餐
+                </div>
+                <p class="plan-desc">稳定可靠的云服务器，适合个人站点与小型应用</p>
+                <div class="specs">
+                    <div class="spec">
+                        <div class="spec-value">2 核</div>
+                        <div class="spec-label">CPU</div>
+                    </div>
+                    <div class="spec">
+                        <div class="spec-value">2 GB</div>
+                        <div class="spec-label">内存</div>
+                    </div>
+                    <div class="spec">
+                        <div class="spec-value">40 GB</div>
+                        <div class="spec-label">SSD</div>
+                    </div>
+                </div>
+                <div class="price-row">
+                    <span class="price-label">应付金额</span>
+                    <div class="price">
+                        <span class="currency">¥</span>
+                        <span class="amount">68</span>
+                        <span class="period">/ 月</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="qr-section">
+            <div class="qr-card">
+                <div class="alipay-header">
+                    <div class="alipay-logo">支</div>
+                    <span class="alipay-text">支付宝扫码付款</span>
+                </div>
+                <div class="qr-wrapper">
+                    <img src="assets/alipay-qr.jpg" alt="支付宝收款二维码">
+                </div>
+                <div class="scan-hint">
+                    打开支付宝 <strong>[扫一扫]</strong>
+                </div>
+                <div class="payee-info">
+                    收款方：<span class="payee-name">bEacon(*烽)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="notice">
+                <div class="notice-title">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    付款说明
+                </div>
+                请核对收款方信息后再付款。付款后请保留截图，并联系管理员确认开通服务。若对账单有疑问，请勿支付。
+            </div>
+        </div>
+    </div>
+</body>
+</html>
